@@ -2076,12 +2076,14 @@ local speedGrind = rebirthFarmFolder:AddSwitch("Fast Strength", function(bool)
 	task.spawn(function()
 		while isGrinding do
 			local ping = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue()
-			
+
 			if ping > 200 then
 				delay = math.min(delay + 0.005, maxDelay)
 			elseif ping < 100 then
 				delay = math.max(delay - 0.0025, minDelay)
 			end
+
+			print("Delay:", delay, "Ping:", ping)
 
 			task.wait(1)
 		end
