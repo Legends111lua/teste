@@ -2063,13 +2063,31 @@ local speedGrind = rebirthFarmFolder:AddSwitch("Fast Strength", function(bool)
 
 	equipUniquePet("Swift Samurai")
 
+	local delay = 0.02
+	local minDelay, maxDelay = 0.005, 0.1
+
 	task.spawn(function()
 		while isGrinding do
 			player.muscleEvent:FireServer("rep")
-			task.wait(0.01) -- ajustado para 20 reps por segundo
+			task.wait(delay)
+		end
+	end)
+
+	task.spawn(function()
+		while isGrinding do
+			local ping = game:GetService("Stats").Network.ServerStatsItem["Data Ping"]:GetValue()
+			
+			if ping > 200 then
+				delay = math.min(delay + 0.005, maxDelay)
+			elseif ping < 100 then
+				delay = math.max(delay - 0.0025, minDelay)
+			end
+
+			task.wait(1)
 		end
 	end)
 end)
+
 
 
 local killerTab = window:AddTab("Killer")
@@ -2613,4 +2631,3 @@ noteTab:AddLabel("")
 -- This gives better control over formatting
 noteTab:AddLabel("criado por: ZeusLGD")
 noteTab:AddLabel("Créditos para Legends Store")
-
